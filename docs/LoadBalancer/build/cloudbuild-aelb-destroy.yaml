@@ -22,7 +22,7 @@ steps:
         set -e # Fail on any error
         apt-get update -y && apt-get install -y unzip git wget
 
-        TERRAFORM_VERSION="1.8.5"
+        TERRAFORM_VERSION="1.10.2"
         echo "Downloading Terraform v$${TERRAFORM_VERSION}..."
         wget https://releases.hashicorp.com/terraform/$${TERRAFORM_VERSION}/terraform_$${TERRAFORM_VERSION}_linux_amd64.zip
         unzip terraform_$${TERRAFORM_VERSION}_linux_amd64.zip
@@ -32,8 +32,8 @@ steps:
         cd execution
 
         echo "Destroying 07-consumer-load-balancing/Application/External stage resources..."
-        ./run.sh -s load-balancing/application/external/application/external -t init
-        ./run.sh -s load-balancing/application/external/application/external -t destroy-auto-approve
+        ./run.sh -s load-balancing/application/external -t init
+        ./run.sh -s load-balancing/application/external -t destroy-auto-approve
 
         echo "Destroying 06-consumer/MIG stage resources..."
         ./run.sh -s consumer/mig -t init
@@ -50,11 +50,6 @@ steps:
         echo "Destroying 01-organization stage resources..."
         ./run.sh -s organization -t init
         ./run.sh -s organization -t destroy-auto-approve
-        
-        # If bootstrap was part of apply, uncomment to destroy:
-        # echo "Destroying 00-bootstrap stage resources..."
-        # ./run.sh -s bootstrap -t init
-        # ./run.sh -s bootstrap -t destroy-auto-approve
 
         echo "Application Load Balancer with MIG destruction completed."
 

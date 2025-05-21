@@ -96,7 +96,7 @@ This method uses Google Cloud Shell and Cloud Build to automate the deployment o
 
 1.  **Open in Cloud Shell:** Click the button below to clone the repository and open the necessary configuration files in the Cloud Shell editor. **Note:** For testing, ensure the `cloudshell_git_repo` and `cloudshell_git_branch` parameters in the URL point to your fork and specific branch where these "single click" files and the updated guide exist. For the final version, this will point to the main repository.
 
-    <a href="https://ssh.cloud.google.com/cloudshell/editor?shellonly=true&cloudshell_git_repo=https://github.com/axtma/cloudnetworking-config-solutions.git&cloudshell_git_branch=alb-single-click-feature&cloudshell_workspace=.&cloudshell_open_in_editor=configuration/bootstrap.tfvars,configuration/organization.tfvars,configuration/networking.tfvars,configuration/security/mig.tfvars,execution/06-consumer/MIG/config/instance.yaml.example,execution/07-consumer-load-balancing/Application/External/config/instance2.yaml.example&cloudshell_tutorial=docs/LoadBalancer/external-application-lb-mig.md#deploy-with-single-click" target="_new">
+    <a href="https://ssh.cloud.google.com/cloudshell/editor?shellonly=true&cloudshell_git_repo=https://github.com/axtma/cloudnetworking-config-solutions.git&cloudshell_git_branch=alb-single-click-feature&cloudshell_workspace=.&cloudshell_open_in_editor=configuration/bootstrap.tfvars,configuration/organization.tfvars,configuration/networking.tfvars,configuration/security/mig.tfvars,execution/06-consumer/MIG/config/instance.yaml.example,execution/07-consumer-load-balancing/Application/External/config/instance1.yaml.example&cloudshell_tutorial=docs/LoadBalancer/external-application-lb-mig.md#deploy-with-single-click" target="_new">
         <img alt="Open in Cloud Shell" src="https://gstatic.com/cloudssh/images/open-btn.svg">
     </a>
 
@@ -267,7 +267,7 @@ This method uses Google Cloud Shell and Cloud Build to automate the deployment o
         ```
 
     * **07-consumer-load-balancing stage**
-        * Update the execution/07-consumer-load-balancing/Application/External/config/instance.yaml.example file and rename it to instance.yaml
+        * Update the execution/07-consumer-load-balancing/Application/External/config/instance1.yaml.example file and rename it to instance1.yaml
 
         ```
         name: load-balancer-cncs
@@ -275,9 +275,20 @@ This method uses Google Cloud Shell and Cloud Build to automate the deployment o
         network: cncs-vpc
         backends:
         default:
+            protocol: "HTTP"
+            port: 80
+            port_name: "http"
+            timeout_sec: 30
+            enable_cdn: false
+            health_check:
+            request_path: "/healthz"
+            port: 80
+            log_config:
+            enable: true
+            sample_rate: 0.5
             groups:
             - group: minimal-mig
-              region: us-central1
+              region : us-central1
         ```
 
 3. **Execute the terraform script**
