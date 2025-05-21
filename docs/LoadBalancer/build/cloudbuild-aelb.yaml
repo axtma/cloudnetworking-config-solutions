@@ -13,7 +13,7 @@
 # limitations under the License.
 
 steps:
-- id: 'deploy-nlb-passthrough'
+- id: 'deploy-alb-mig'
   name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:latest'
   entrypoint: /bin/bash
   args:
@@ -22,55 +22,46 @@ steps:
         set -e # Fail on any error
         apt-get update -y && apt-get install -y unzip git wget # Ensure tools are present
 
-        TERRAFORM_VERSION="1.8.5" # Using a specific version from 1.8.x series
+        TERRAFORM_VERSION="1.8.5" # Consistent with your guide's "Terraform 1.8+"
         echo "Downloading Terraform v$${TERRAFORM_VERSION}..."
         wget https://releases.hashicorp.com/terraform/$${TERRAFORM_VERSION}/terraform_$${TERRAFORM_VERSION}_linux_amd64.zip
         unzip terraform_$${TERRAFORM_VERSION}_linux_amd64.zip
         mv terraform /usr/local/bin/
         terraform version
 
-        # Navigate to the execution directory where run.sh is located
-        cd execution
+        cd execution # Navigate to the execution directory
 
-        # The 00-bootstrap stage is crucial. Ensure users know to run it manually first if not included here.
-        # Or, uncomment if it's to be fully automated and idempotent.
+        # Bootstrap stage: uncomment if needed for a fully automated first-time setup.
         # echo "Executing 00-bootstrap stage..."
         # ./run.sh -s bootstrap -t init-apply-auto-approve
 
-        echo "Executing 01-organization stage for NLB..."
+        echo "Executing 01-organization stage for ALB..."
         ./run.sh -s organization -t init-apply-auto-approve
 
-        echo "Executing 02-networking stage for NLB..."
+        echo "Executing 02-networking stage for ALB..."
         ./run.sh -s networking -t init-apply-auto-approve
         
-        echo "Executing 03-security/MIG stage for NLB..."
-        # This assumes run.sh correctly maps 'security/mig' to 'execution/03-security/MIG/'
+        echo "Executing 03-security/MIG stage for ALB backends..."
+        # Assumes run.sh maps 'security/mig' to 'execution/03-security/MIG/'
         ./run.sh -s security/mig -t init-apply-auto-approve
 
-        echo "Executing 06-consumer/MIG stage for NLB..."
-        # This assumes run.sh correctly maps 'consumer/mig' to 'execution/06-consumer/MIG/'
+        echo "Executing 06-consumer/MIG stage for ALB backends..."
+        # Assumes run.sh maps 'consumer/mig' to 'execution/06-consumer/MIG/'
         ./run.sh -s consumer/mig -t init-apply-auto-approve
         
-        echo "Executing 07-consumer-load-balancing/Network/Passthrough/External stage for NLB..."
-        # This assumes run.sh correctly maps this long stage name
-        ./run.sh -s consumer-load-balancing/network/passthrough/external -t init-apply-auto-approve
+        echo "Executing 07-consumer-load-balancing/Application/External stage for ALB..."
+        # This stage path is specific to ALB
+        ./run.sh -s consumer-load-balancing/application/external -t init-apply-auto-approve
 
-        echo "NLB Passthrough deployment completed."
+        echo "Application Load Balancer with MIG deployment completed."
 
 options:
   env:
-    # PROJECT_ID is automatically available in Cloud Build.
-    # Terraform variables should primarily be set in their respective .tfvars files as per the guide.
-    # This TF_VAR_project_id can serve as a fallback or override if variables are defined to accept it.
     - 'TF_VAR_project_id=$PROJECT_ID'
-    # Example: If your networking.tfvars needs region from env, though guide says edit the file
-    # - 'TF_VAR_region=us-central1' 
-
-  # Increase timeout if deployment takes longer
   timeout: 7200s # 2 hours
-
 tags:
   - 'terraform'
-  - 'nlb-passthrough'
-  - 'external-lb'
+  - 'alb'
+  - 'application-load-balancer'
+  - 'mig-backend'
   - 'apply'

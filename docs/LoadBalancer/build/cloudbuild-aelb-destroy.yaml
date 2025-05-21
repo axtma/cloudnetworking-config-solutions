@@ -13,7 +13,7 @@
 # limitations under the License.
 
 steps:
-- id: 'destroy-nlb-passthrough'
+- id: 'destroy-alb-mig'
   name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:latest'
   entrypoint: /bin/bash
   args:
@@ -22,7 +22,7 @@ steps:
         set -e # Fail on any error
         apt-get update -y && apt-get install -y unzip git wget
 
-        TERRAFORM_VERSION="1.8.5" # Consistent Terraform version
+        TERRAFORM_VERSION="1.8.5"
         echo "Downloading Terraform v$${TERRAFORM_VERSION}..."
         wget https://releases.hashicorp.com/terraform/$${TERRAFORM_VERSION}/terraform_$${TERRAFORM_VERSION}_linux_amd64.zip
         unzip terraform_$${TERRAFORM_VERSION}_linux_amd64.zip
@@ -31,9 +31,9 @@ steps:
 
         cd execution
 
-        echo "Destroying 07-consumer-load-balancing/Network/Passthrough/External stage resources..."
-        ./run.sh -s consumer-load-balancing/network/passthrough/external -t init
-        ./run.sh -s consumer-load-balancing/network/passthrough/external -t destroy-auto-approve
+        echo "Destroying 07-consumer-load-balancing/Application/External stage resources..."
+        ./run.sh -s consumer-load-balancing/application/external -t init
+        ./run.sh -s consumer-load-balancing/application/external -t destroy-auto-approve
 
         echo "Destroying 06-consumer/MIG stage resources..."
         ./run.sh -s consumer/mig -t init
@@ -56,16 +56,15 @@ steps:
         # ./run.sh -s bootstrap -t init
         # ./run.sh -s bootstrap -t destroy-auto-approve
 
-        echo "NLB Passthrough destruction completed."
+        echo "Application Load Balancer with MIG destruction completed."
 
 options:
   env:
     - 'TF_VAR_project_id=$PROJECT_ID'
-    # - 'TF_VAR_region=us-central1'
   timeout: 7200s # 2 hours
-
 tags:
   - 'terraform'
-  - 'nlb-passthrough'
-  - 'external-lb'
+  - 'alb'
+  - 'application-load-balancer'
+  - 'mig-backend'
   - 'destroy'

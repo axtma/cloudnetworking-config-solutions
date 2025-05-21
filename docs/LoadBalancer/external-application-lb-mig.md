@@ -9,6 +9,7 @@
 5. [Architecture Components](#architecture-components)
 6. [Deploy the Solution](#deploy-the-solution)
 7. [Prerequisites](#prerequisites)
+8. [Deploy with "single-click"](#deploy-with-single-click)
 8. [Deploy through Terraform-cli](#deploy-through-terraform-cli)
 9. [Optional - Delete the Deployment](#optional-delete-the-deployment)
 10. [Troubleshoot Errors](#troubleshoot-errors)
@@ -75,6 +76,48 @@ For the usage of this configuration solution, the following should be installed
 
 1. **Terraform** : modules are for use with Terraform 1.8+ and tested using Terraform 1.8+. Choose and install the preferred Terraform binary from [here](https://releases.hashicorp.com/terraform/).
 2. **gcloud SDK** : install gcloud SDK from [here](https://cloud.google.com/sdk/docs/install) to authenticate to Google Cloud while running Terraform.
+
+### **Deploy with "single click" (Using Cloud Shell and Cloud Build)** {#deploy-with-single-click}
+
+This method uses Google Cloud Shell and Cloud Build to automate the deployment of the External Application Load Balancer with a MIG backend.
+
+1.  **Open in Cloud Shell:** Click the button below to clone the repository and open the necessary configuration files in the Cloud Shell editor. **Note:** For testing, ensure the `cloudshell_git_repo` and `cloudshell_git_branch` parameters in the URL point to your fork and specific branch where these "single click" files and the updated guide exist. For the final version, this will point to the main repository.
+
+    <a href="https://ssh.cloud.google.com/cloudshell/editor?shellonly=true&cloudshell_git_repo=https://github.com/axtma/cloudnetworking-config-solutions.git&cloudshell_git_branch=alb-single-click-feature&cloudshell_workspace=.&cloudshell_open_in_editor=configuration/bootstrap.tfvars,configuration/organization.tfvars,configuration/networking.tfvars,configuration/security/mig.tfvars,execution/06-consumer/MIG/config/instance.yaml.example,execution/07-consumer-load-balancing/Application/External/config/instance2.yaml.example&cloudshell_tutorial=docs/LoadBalancer/external-application-lb-mig.md#deploy-with-single-click" target="_new">
+        <img alt="Open in Cloud Shell" src="https://gstatic.com/cloudssh/images/open-btn.svg">
+    </a>
+
+2.  **Review and Update Configuration Files:**
+    The Cloud Shell editor will open key configuration files. Review each file and update values (project IDs, user IDs/groups, network names, regions, etc.) as per your requirements. Follow the guidance in the "Deploy through Terraform-cli" section of this document for details on each file:
+    * `configuration/bootstrap.tfvars`
+    * `configuration/organization.tfvars`
+    * `configuration/networking.tfvars`
+    * `configuration/security/mig.tfvars`
+    * `execution/06-consumer/MIG/config/instance.yaml.example` (Rename to `instance.yaml` after updating.)
+    * `execution/07-consumer-load-balancing/Application/External/config/instance.yaml.example` (Rename to `instance.yaml` after updating.)
+
+3.  **Run ALB Prerequisites Script:**
+    This script prepares your Google Cloud project: enables APIs, creates a Terraform state bucket for ALB, and sets Cloud Build permissions. From the root of the cloned `cloudnetworking-config-solutions` directory in Cloud Shell, run:
+    ```bash
+    sh docs/LoadBalancer/helper-script/prereq-alb.sh
+    ```
+    When prompted, enter your Google Cloud Project ID.
+
+4.  **Submit Cloud Build Job to Deploy ALB:**
+    Once configurations are updated and prerequisites are met, submit the Cloud Build job. Ensure you are in the root of the cloned repository.
+    ```bash
+    gcloud builds submit . --config docs/LoadBalancer/build/cloudbuild-alb.yaml --project YOUR_PROJECT_ID
+    ```
+    Replace `YOUR_PROJECT_ID` with your Google Cloud Project ID.
+
+5.  **Verify Deployment:**
+    After the Cloud Build job completes, go to the "Load Balancing" section in the Google Cloud Console. Confirm your External Application Load Balancer is created, and the MIG is attached as a backend and healthy.
+
+6.  **[Optional] Delete the Deployment using Cloud Build:**
+    To remove all resources created by this deployment, run the destroy Cloud Build job:
+    ```bash
+    gcloud builds submit . --config docs/LoadBalancer/build/cloudbuild-alb-destroy.yaml --project YOUR_PROJECT_ID
+    ```
 
 ### **Deploy through Terraform-cli**
 
