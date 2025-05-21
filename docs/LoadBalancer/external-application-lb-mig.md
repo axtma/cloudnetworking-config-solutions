@@ -10,10 +10,10 @@
 6. [Deploy the Solution](#deploy-the-solution)
 7. [Prerequisites](#prerequisites)
 8. [Deploy with "single-click"](#deploy-with-single-click)
-8. [Deploy through Terraform-cli](#deploy-through-terraform-cli)
-9. [Optional - Delete the Deployment](#optional-delete-the-deployment)
-10. [Troubleshoot Errors](#troubleshoot-errors)
-11. [Submit Feedback](#submit-feedback)
+9. [Deploy through Terraform-cli](#deploy-through-terraform-cli)
+10. [Optional - Delete the Deployment](#optional-delete-the-deployment)
+11. [Troubleshoot Errors](#troubleshoot-errors)
+12. [Submit Feedback](#submit-feedback)
 
 ## **Introduction**
 
@@ -77,7 +77,7 @@ For the usage of this configuration solution, the following should be installed
 1. **Terraform** : modules are for use with Terraform 1.8+ and tested using Terraform 1.8+. Choose and install the preferred Terraform binary from [here](https://releases.hashicorp.com/terraform/).
 2. **gcloud SDK** : install gcloud SDK from [here](https://cloud.google.com/sdk/docs/install) to authenticate to Google Cloud while running Terraform.
 
-### **Deploy with "single click" (Using Cloud Shell and Cloud Build)** {#deploy-with-single-click}
+### **Deploy with "single click"**
 
 This method uses Google Cloud Shell and Cloud Build to automate the deployment of the External Application Load Balancer with a MIG backend.
 
