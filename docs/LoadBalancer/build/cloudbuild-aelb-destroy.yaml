@@ -32,8 +32,8 @@ steps:
         cd execution
 
         echo "Destroying 07-consumer-load-balancing/Application/External stage resources..."
-        ./run.sh -s consumer-load-balancing/application/external -t init
-        ./run.sh -s consumer-load-balancing/application/external -t destroy-auto-approve
+        ./run.sh -s load-balancing/application/external/application/external -t init
+        ./run.sh -s load-balancing/application/external/application/external -t destroy-auto-approve
 
         echo "Destroying 06-consumer/MIG stage resources..."
         ./run.sh -s consumer/mig -t init

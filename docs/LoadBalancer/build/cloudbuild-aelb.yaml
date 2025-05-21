@@ -51,7 +51,7 @@ steps:
         
         echo "Executing 07-consumer-load-balancing/Application/External stage for ALB..."
         # This stage path is specific to ALB
-        ./run.sh -s consumer-load-balancing/application/external -t init-apply-auto-approve
+        ./run.sh -s load-balancing/application/external -t init-apply-auto-approve
 
         echo "Application Load Balancer with MIG deployment completed."
 

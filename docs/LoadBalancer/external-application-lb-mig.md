@@ -191,7 +191,7 @@ This method uses Google Cloud Shell and Cloud Build to automate the deployment o
 
         shared_vpc_host = false
 
-        ## PSC/Service Connectivity Variables
+        ## PSC/Service Connectivity variable
         create_scp_policy  = false
 
         ## Cloud Nat input variables
