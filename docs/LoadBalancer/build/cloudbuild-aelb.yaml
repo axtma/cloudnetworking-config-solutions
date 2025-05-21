@@ -22,7 +22,7 @@ steps:
         set -e # Fail on any error
         apt-get update -y && apt-get install -y unzip git wget # Ensure tools are present
 
-        TERRAFORM_VERSION="1.8.5" # Consistent with your guide's "Terraform 1.8+"
+        TERRAFORM_VERSION="1.10.2" # Consistent with your guide's "Terraform 1.8+"
         echo "Downloading Terraform v$${TERRAFORM_VERSION}..."
         wget https://releases.hashicorp.com/terraform/$${TERRAFORM_VERSION}/terraform_$${TERRAFORM_VERSION}_linux_amd64.zip
         unzip terraform_$${TERRAFORM_VERSION}_linux_amd64.zip
@@ -58,7 +58,7 @@ steps:
 options:
   env:
     - 'TF_VAR_project_id=$PROJECT_ID'
-  timeout: 7200s # 2 hours
+timeout: 7200s # 2 hours
 tags:
   - 'terraform'
   - 'alb'

@@ -61,7 +61,7 @@ steps:
 options:
   env:
     - 'TF_VAR_project_id=$PROJECT_ID'
-  timeout: 7200s # 2 hours
+timeout: 7200s # 2 hours
 tags:
   - 'terraform'
   - 'alb'

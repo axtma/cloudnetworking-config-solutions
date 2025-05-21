@@ -100,7 +100,14 @@ This method uses Google Cloud Shell and Cloud Build to automate the deployment o
         <img alt="Open in Cloud Shell" src="https://gstatic.com/cloudssh/images/open-btn.svg">
     </a>
 
-2.  **Review and Update Configuration Files:**
+2.  **Run ALB Prerequisites Script:**
+    This script prepares your Google Cloud project: enables APIs, creates a Terraform state bucket for ALB, and sets Cloud Build permissions. From the root of the cloned `cloudnetworking-config-solutions` directory in Cloud Shell, run:
+    ```bash
+    sh docs/LoadBalancer/helper-script/prereq-aelb.sh
+    ```
+    When prompted, enter your Google Cloud Project ID.
+
+3.   **Review and Update Configuration Files:**
     The Cloud Shell editor will open key configuration files. Review each file and update values (project IDs, user IDs/groups, network names, regions, etc.) as per your requirements. Follow the guidance in the "Deploy through Terraform-cli" section of this document for details on each file:
     * `configuration/bootstrap.tfvars`
     * `configuration/organization.tfvars`
@@ -109,27 +116,20 @@ This method uses Google Cloud Shell and Cloud Build to automate the deployment o
     * `execution/06-consumer/MIG/config/instance.yaml.example` (Rename to `instance.yaml` after updating.)
     * `execution/07-consumer-load-balancing/Application/External/config/instance.yaml.example` (Rename to `instance.yaml` after updating.)
 
-3.  **Run ALB Prerequisites Script:**
-    This script prepares your Google Cloud project: enables APIs, creates a Terraform state bucket for ALB, and sets Cloud Build permissions. From the root of the cloned `cloudnetworking-config-solutions` directory in Cloud Shell, run:
-    ```bash
-    sh docs/LoadBalancer/helper-script/prereq-alb.sh
-    ```
-    When prompted, enter your Google Cloud Project ID.
-
-4.  **Submit Cloud Build Job to Deploy ALB:**
+4. **Submit Cloud Build Job to Deploy ALB:**
     Once configurations are updated and prerequisites are met, submit the Cloud Build job. Ensure you are in the root of the cloned repository.
     ```bash
-    gcloud builds submit . --config docs/LoadBalancer/build/cloudbuild-alb.yaml --project YOUR_PROJECT_ID
+    gcloud builds submit . --config docs/LoadBalancer/build/cloudbuild-aelb.yaml
     ```
-    Replace `YOUR_PROJECT_ID` with your Google Cloud Project ID.
 
 5.  **Verify Deployment:**
     After the Cloud Build job completes, go to the "Load Balancing" section in the Google Cloud Console. Confirm your External Application Load Balancer is created, and the MIG is attached as a backend and healthy.
 
 6.  **[Optional] Delete the Deployment using Cloud Build:**
+
     To remove all resources created by this deployment, run the destroy Cloud Build job:
     ```bash
-    gcloud builds submit . --config docs/LoadBalancer/build/cloudbuild-alb-destroy.yaml --project YOUR_PROJECT_ID
+    gcloud builds submit . --config docs/LoadBalancer/build/cloudbuild-aelb-destroy.yaml
     ```
 
 ### **Deploy through Terraform-cli**
@@ -173,31 +173,56 @@ This method uses Google Cloud Shell and Cloud Build to automate the deployment o
         }
         ```
    * **02-networking stage**
-     * Update configuration/networking.tfvars \- update the Google Cloud Project ID and the parameters for additional resources such as VPC, subnet, and NAT as outlined below.
+     * Update `configuration/networking.tfvars` update the Google Cloud Project ID and the parameters for additional resources such as VPC, subnet, and NAT as outlined below.
 
         ```
-        project_id  = "your-project-id",
+        project_id  = "your-project-id"
         region      = "us-central1"
 
         ## VPC input variables
-        network_name = "CNCS_VPC"
+        network_name = "cncs-vpc"
         subnets = [
-          {
+        {
             ip_cidr_range = "10.0.0.0/24"
-            name          = "CNCS_VPC_Subnet_1"
-            region        = "us-central1-a"
-          }
+            name          = "cncs-vpc-subnet-1"
+            region        = "us-central1"
+        }
         ]
-        psa_range_name    = range1
-        psa_range         = "10.0.64.0/20"
+
+        shared_vpc_host = false
 
         ## PSC/Service Connectivity Variables
         create_scp_policy  = false
 
         ## Cloud Nat input variables
         create_nat = true
+
         ## Cloud HA VPN input variables
+
         create_havpn = false
+        peer_gateways = {
+        default = {
+            gcp = "" # e.g. projects/<google-cloud-peer-projectid>/regions/<google-cloud-region>/vpnGateways/<peer-vpn-name>
+        }
+        }
+
+        tunnel_1_router_bgp_session_range = ""
+        tunnel_1_bgp_peer_asn             = 64514
+        tunnel_1_bgp_peer_ip_address      = ""
+        tunnel_1_shared_secret            = ""
+
+        tunnel_2_router_bgp_session_range = ""
+        tunnel_2_bgp_peer_asn             = 64514
+        tunnel_2_bgp_peer_ip_address      = ""
+        tunnel_2_shared_secret            = ""
+
+        ## Cloud Interconnect input variables
+
+        create_interconnect = false # Use true or false
+
+        ## NCC input variables
+
+        create_ncc = false
         ```
 
    * **03-security stage**
@@ -205,7 +230,7 @@ This method uses Google Cloud Shell and Cloud Build to automate the deployment o
 
         ```
         project_id = "your-project-id"
-        network    = "CNCS_VPC"
+        network    = "cncs-vpc"
         ingress_rules = {
         fw-allow-health-check = {
             deny               = false
@@ -233,26 +258,26 @@ This method uses Google Cloud Shell and Cloud Build to automate the deployment o
      * Update the execution/06-consumer/MIG/config/instance.yaml.example file and rename it to instance.yaml
 
         ```
-
         name: minimal-mig
-        project_id: 
+        project_id: your-project-id
         location: us-central1
         zone : us-central1-a
-        vpc_name : CNCS_VPC
-        subnetwork_name : CNCS_VPC_Subnet_1
+        vpc_name : cncs-vpc
+        subnetwork_name : cncs-vpc-subnet-1
         ```
+
     * **07-consumer-load-balancing stage**
         * Update the execution/07-consumer-load-balancing/Application/External/config/instance.yaml.example file and rename it to instance.yaml
 
         ```
-        name: load_balancer_cncs
+        name: load-balancer-cncs
         project: your-project-id
-        network: CNCS_VPC
+        network: cncs-vpc
         backends:
         default:
             groups:
             - group: minimal-mig
-                region: us-central1
+              region: us-central1
         ```
 
 3. **Execute the terraform script**
