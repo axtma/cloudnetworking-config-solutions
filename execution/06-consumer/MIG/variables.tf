@@ -343,6 +343,12 @@ variable "metadata" {
   EOF
 }
 
+variable "health_check_default_enable_logging" {
+  description = "Default value for enabling logging in health checks if not specified in MIG YAML."
+  type        = bool
+  default     = false
+}
+
 variable "config_folder_path" {
   description = "Location of YAML files holding GCE configuration values."
   type        = string

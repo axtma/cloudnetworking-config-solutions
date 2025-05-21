@@ -41,4 +41,5 @@ module "mig" {
       }
     }
   }
+  named_ports = try(each.value.named_ports, var.named_ports)
 }

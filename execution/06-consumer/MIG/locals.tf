@@ -49,7 +49,7 @@ locals {
 
       health_check_config = (
         try(mig.health_check_config, null) != null ? {
-          enable_logging = try(mig.health_check_config.enable_logging, false),
+          enable_logging = try(mig.health_check_config.enable_logging, var.health_check_default_enable_logging),
           tcp            = try(mig.health_check_config.tcp, null),   # TCP health check settings
           http           = try(mig.health_check_config.http, null),  # HTTP health check settings
           https          = try(mig.health_check_config.https, null), # HTTPS health check settings
@@ -60,7 +60,8 @@ locals {
       )
 
       description         = try(mig.description, "Terraform managed.")
-      distribution_policy = try(mig.distribution_policy, null)
+      distribution_policy = try(mig.distribution_policy, var.distribution_policy)
+      named_ports         = try(mig.named_ports, var.named_ports)
     }
   ])
 

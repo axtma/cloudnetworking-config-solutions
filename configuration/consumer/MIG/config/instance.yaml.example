@@ -4,3 +4,6 @@ location: <region> E.g. : us-central1
 zone : <zone> E.g. : us-central1-a
 vpc_name : <network-name>
 subnetwork_name : <subnetwork-name>
+named_ports:
+    http: 80
+    https: 443
