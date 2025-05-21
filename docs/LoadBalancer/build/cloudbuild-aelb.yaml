@@ -42,11 +42,9 @@ steps:
         ./run.sh -s networking -t init-apply-auto-approve
         
         echo "Executing 03-security/MIG stage for ALB backends..."
-        # Assumes run.sh maps 'security/mig' to 'execution/03-security/MIG/'
         ./run.sh -s security/mig -t init-apply-auto-approve
 
         echo "Executing 06-consumer/MIG stage for ALB backends..."
-        # Assumes run.sh maps 'consumer/mig' to 'execution/06-consumer/MIG/'
         ./run.sh -s consumer/mig -t init-apply-auto-approve
         
         echo "Executing 07-consumer-load-balancing/Application/External stage for ALB..."

@@ -32,7 +32,7 @@
 
 This document provides a comprehensive guide for implementing a Load Balancer using Google Cloud's External Application Load Balancer (EALB) with a Managed Instance Group (MIG) as the backend service. The design aims to enhance application scalability and reliability by efficiently distributing HTTP and HTTPS traffic across multiple instances.
 
-The guide assumes familiarity with Google Cloud Platform (GCP), Kubernetes, and Terraform.
+The guide assumes familiarity with Google Cloud Platform (GCP), Networking, and Terraform.
 
 ## **Objectives**
 
@@ -103,7 +103,7 @@ This method uses Google Cloud Shell and Cloud Build to automate the deployment o
 2.  **Run ALB Prerequisites Script:**
     This script prepares your Google Cloud project: enables APIs, creates a Terraform state bucket for ALB, and sets Cloud Build permissions. From the root of the cloned `cloudnetworking-config-solutions` directory in Cloud Shell, run:
     ```bash
-    sh docs/LoadBalancer/helper-script/prereq-aelb.sh
+    sh docs/LoadBalancer/helper-scripts/prereq-aelb.sh
     ```
     When prompted, enter your Google Cloud Project ID.
 
