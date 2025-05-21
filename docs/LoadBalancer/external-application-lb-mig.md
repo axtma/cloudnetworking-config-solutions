@@ -1,19 +1,32 @@
 # Create an External Application Load Balancer with MIG as backend
 
-## **Table of Contents**
+**On this page**
 
-1. [Introduction](#introduction)
-2. [Objectives](#objectives)
-3. [Architecture](#architecture)
-4. [Request Flow](#request-flow)
-5. [Architecture Components](#architecture-components)
-6. [Deploy the Solution](#deploy-the-solution)
-7. [Prerequisites](#prerequisites)
-8. [Deploy with "single-click"](#deploy-with-single-click)
-9. [Deploy through Terraform-cli](#deploy-through-terraform-cli)
-10. [Optional - Delete the Deployment](#optional-delete-the-deployment)
-11. [Troubleshoot Errors](#troubleshoot-errors)
-12. [Submit Feedback](#submit-feedback)
+  1. Introduction
+
+  2. Objectives
+
+  3. Architecture
+
+  4. Request Flow
+
+  5. Architecture Components
+
+  6. Deploy the Solution
+
+  7. Prerequisites
+
+  8. Deploy with "single-click"
+
+  9. Deploy through Terraform-cli
+
+  10. Optional - Delete the Deployment
+
+  11. Troubleshoot Errors
+
+  12. Submit Feedback
+
+---
 
 ## **Introduction**
 
