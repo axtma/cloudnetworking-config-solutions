@@ -13,10 +13,9 @@
 # limitations under the License.
 
 module "alloy_db" {
-  source   = "GoogleCloudPlatform/alloy-db/google"
-  version  = "~> 3.0"
-  for_each = { for alloydb in local.instance_list : alloydb.cluster_display_name => alloydb }
-
+  source                      = "GoogleCloudPlatform/alloy-db/google"
+  version                     = "~> 3.0"
+  for_each                    = { for alloydb in local.instance_list : alloydb.cluster_display_name => alloydb }
   project_id                  = each.value.project_id
   cluster_id                  = each.value.cluster_id
   cluster_display_name        = each.value.cluster_display_name
