@@ -351,8 +351,6 @@ This method uses Google Cloud Shell and Cloud Build to automate the deployment o
     **or**
 
     ```bash
-
-    ```bash
     ./run.sh --stage all --tfcommand init-apply-auto-approve
     ```
 
