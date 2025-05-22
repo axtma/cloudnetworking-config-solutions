@@ -22,7 +22,7 @@ steps:
         set -e # Fail on any error
         apt-get update -y && apt-get install -y unzip git wget
 
-        TERRAFORM_VERSION="1.8.5" # Consistent Terraform version
+        TERRAFORM_VERSION="1.10.2"
         echo "Downloading Terraform v$${TERRAFORM_VERSION}..."
         wget https://releases.hashicorp.com/terraform/$${TERRAFORM_VERSION}/terraform_$${TERRAFORM_VERSION}_linux_amd64.zip
         unzip terraform_$${TERRAFORM_VERSION}_linux_amd64.zip

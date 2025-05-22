@@ -36,9 +36,9 @@ This solution guide helps you to:
 
 This solution deploys a regional Network Passthrough External Load Balancer. The architecture consists of the following key components within a Customer's Google Cloud Project, residing within a Customer's Google Cloud Organisation:
 
-\<p align="center"\>
-\<img src="images/external-network-passthrough-lb-mig.png" alt="Network Passthrough External Load Balancer Architecture Diagram" width="500"/\>
-\</p\>
+<p align="center">
+    <img src="images/external-network-passthrough-lb-mig.png" alt="Network Passthrough External Load Balancer Architecture Diagram" width="500">
+</p>
 
   * **External Client:** Initiates traffic towards the application.
   * **External IP Address:** The public IP address associated with the Forwarding Rule of the Network Passthrough Load Balancer.
@@ -197,27 +197,26 @@ This method uses Google Cloud Shell and Cloud Build to automate the deployment o
           * Update `configuration/networking.tfvars` and update the Google Cloud Project ID and the parameters for additional resources such as VPC, subnet, and NAT as outlined below.
 
             ```
-            project_id  = "your-project-id",
+            project_id  = "your-project-id"
             region      = "us-central1"
 
             ## VPC input variables
             network_name = "cncs-vpc"
             subnets = [
-              {
+            {
                 ip_cidr_range = "10.0.0.0/24"
                 name          = "cncs-vpc-subnet-1"
-                region        = "us-central1-a"
-              }
+                region        = "us-central1"
+            }
             ]
-            psa_range_name    = "range1"
-            psa_range         = "10.0.64.0/20"
 
-            ## PSC/Service Connectivity Variables
-            create_scp_policy       = false
-            subnets_for_scp_policy = [""]
+            shared_vpc_host = false
+
+            ## PSC/Service Connectivity variable
+            create_scp_policy  = false
 
             ## Cloud Nat input variables
-            create_nat = false
+            create_nat = true
 
             ## Cloud HA VPN input variables
 
@@ -240,12 +239,11 @@ This method uses Google Cloud Shell and Cloud Build to automate the deployment o
 
             ## Cloud Interconnect input variables
 
-            create_interconnect = false
+            create_interconnect = false # Use true or false
 
             ## NCC input variables
 
             create_ncc = false
-
             ```
 
       * **03-security stage**
@@ -331,7 +329,6 @@ This method uses Google Cloud Shell and Cloud Build to automate the deployment o
 
 2.  Remove provisioned resources:
 
-    ```bash
     ```bash
     ./run.sh -s all -t destroy-auto-approve
     ```
