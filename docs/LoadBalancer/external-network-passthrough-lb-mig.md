@@ -31,10 +31,6 @@ This solution guide helps you to:
   * Achieve high performance and low latency for your applications.
   * Automate deployment using Terraform.
   * Understand the architecture and request flow of the network passthrough load balancing solution.
-  * Set up a Network Passthrough Load Balancer to distribute TCP, UDP, or ESP traffic.
-  * Achieve high performance and low latency for your applications.
-  * Automate deployment using Terraform.
-  * Understand the architecture and request flow of the network passthrough load balancing solution.
 
 ## Architecture
 
@@ -44,15 +40,6 @@ This solution deploys a regional Network Passthrough External Load Balancer. The
 \<img src="images/external-network-passthrough-lb-mig.png" alt="Network Passthrough External Load Balancer Architecture Diagram" width="500"/\>
 \</p\>
 
-  * **External Client:** Initiates traffic towards the application.
-  * **External IP Address:** The public IP address associated with the Forwarding Rule of the Network Passthrough Load Balancer.
-  * **External Load Balancer (Network Passthrough):** Operates at the network layer (Layer 4) and distributes incoming traffic to backend instances without proxying the connection. This deployment uses a *regional* NLB.
-  * **Forwarding Rule:** Directs incoming traffic based on IP address, protocol, and port to the Regional Backend Service.
-  * **Regional Backend Service:** Defines the backend instances (in this case, within a Regional Managed Instance Group) that will receive traffic. It also manages health checks.
-  * **Zonal Backend Instance Groups:** Managed Instance Groups (MIGs) deployed across multiple zones within a region (e.g., `us-central1-a`, `us-central1-b`). These groups contain the backend web servers.
-  * **TCP Health Check:** Periodically probes the backend instances to determine their health and availability. Traffic is only sent to healthy instances.
-  * **NAT (Network Address Translation):** While not directly part of the NLB's data path, NAT might be used for outbound internet access from the backend instances.
-  * **Direct Server Return (DSR):** The diagram indicates a Direct Server Return path (dashed red lines). This is an advanced configuration where backend instances send responses directly to the client, bypassing the load balancer for egress traffic. This can improve performance and reduce latency.
   * **External Client:** Initiates traffic towards the application.
   * **External IP Address:** The public IP address associated with the Forwarding Rule of the Network Passthrough Load Balancer.
   * **External Load Balancer (Network Passthrough):** Operates at the network layer (Layer 4) and distributes incoming traffic to backend instances without proxying the connection. This deployment uses a *regional* NLB.
@@ -85,16 +72,7 @@ The flow of a request through this Network Passthrough External Load Balancer se
   * **Zonal Backend Instance Groups (MIGs):** Groups of identical virtual machine instances in different zones within a region, serving the application.
   * **TCP Health Check:** Monitors the health of the backend instances.
   * **Direct Server Return (DSR):** An optional configuration allowing backend instances to send responses directly to clients.
-  * **Client:** The user or system sending traffic to your application.
-  * **External IP Address:** The public IP address for accessing the load-balanced application.
-  * **Network Passthrough External Load Balancer:** The regional load balancer distributing network traffic at Layer 3/4.
-  * **Forwarding Rule:** Directs incoming traffic to the backend service based on configured criteria.
-  * **Regional Backend Service:** Manages the backend instances and their health.
-  * **Zonal Backend Instance Groups (MIGs):** Groups of identical virtual machine instances in different zones within a region, serving the application.
-  * **TCP Health Check:** Monitors the health of the backend instances.
-  * **Direct Server Return (DSR):** An optional configuration allowing backend instances to send responses directly to clients.
 
-## Deploy the Solution
 ## Deploy the Solution
 
 This section provides instructions on deploying the load balancer solution using Terraform.
@@ -110,24 +88,19 @@ For this configuration, ensure the following are installed:
 ### Deploy with "single-click"
 
 This method uses Google Cloud Shell and Cloud Build to automate the deployment of the Network Passthrough External Load Balancer with a MIG backend.
-This method uses Google Cloud Shell and Cloud Build to automate the deployment of the Network Passthrough External Load Balancer with a MIG backend.
 
 1.  **Open in Cloud Shell:** Click the button below to clone the repository and open the necessary configuration files in the Cloud Shell editor.
     *Note: For testing, ensure the `cloudshell_git_repo` and `cloudshell_git_branch` parameters in the URL point to your fork and specific branch where these "single click" files and the updated guide exist. For the final version, this will point to the main repository.*
     *Note: For testing, ensure the `cloudshell_git_repo` and `cloudshell_git_branch` parameters in the URL point to your fork and specific branch where these "single click" files and the updated guide exist. For the final version, this will point to the main repository.*
 
-    <a href="https://ssh.cloud.google.com/cloudshell/editor?shellonly=true&cloudshell_git_repo=https://github.com/axtma/cloudnetworking-config-solutions.git&cloudshell_git_branch=main&cloudshell_workspace=.&cloudshell_open_in_editor=configuration/bootstrap.tfvars,configuration/organization.tfvars,configuration/networking.tfvars,configuration/security/mig.tfvars,configuration/06-consumer/MIG/config/instance.yaml.example,configuration/07-consumer-load-balancing/Network/Passthrough/External/config/instance-lite.yaml.example&cloudshell_tutorial=docs/LoadBalancer/external-network-passthrough-lb.md#deploy-with-single-click" target="_new">
+    <a href="https://ssh.cloud.google.com/cloudshell/editor?shellonly=true&cloudshell_git_repo=https://github.com/axtma/cloudnetworking-config-solutions.git&cloudshell_git_branch=main&cloudshell_workspace=.&cloudshell_open_in_editor=configuration/bootstrap.tfvars,configuration/organization.tfvars,configuration/networking.tfvars,configuration/security/mig.tfvars,configuration/consumer/MIG/config/instance.yaml.example,configuration/consumer-load-balancing/Network/Passthrough/External/config/instance-lite.yaml.example&cloudshell_tutorial=docs/LoadBalancer/external-network-passthrough-lb.md#deploy-with-single-click" target="_new">
     <img alt="Open in Cloud Shell" src="https://gstatic.com/cloudssh/images/open-btn.svg">
     </a>
 
 2.  **Run NLB Prerequisites Script:**
     This script prepares your Google Cloud project: enables APIs, creates a Terraform state bucket for NLB, and sets Cloud Build permissions. From the root of the cloned `cloudnetworking-config-solutions` directory in Cloud Shell, run:
 
-2.  **Run NLB Prerequisites Script:**
-    This script prepares your Google Cloud project: enables APIs, creates a Terraform state bucket for NLB, and sets Cloud Build permissions. From the root of the cloned `cloudnetworking-config-solutions` directory in Cloud Shell, run:
-
     ```bash
-    sh docs/LoadBalancer/helper-scripts/prereq-nelb.sh
     sh docs/LoadBalancer/helper-scripts/prereq-nelb.sh
     ```
 
@@ -162,22 +135,16 @@ This method uses Google Cloud Shell and Cloud Build to automate the deployment o
 
     ```bash
     gcloud builds submit . --config docs/LoadBalancer/build/cloudbuild-nelb.yaml
-    gcloud builds submit . --config docs/LoadBalancer/build/cloudbuild-nelb.yaml
     ```
 
 5.  **Verify Deployment:**
-    After the Cloud Build job completes, go to the "Load Balancing" section in the Google Cloud Console. Confirm your Network Passthrough External Load Balancer is created, and the MIG is attached as a backend and healthy.
     After the Cloud Build job completes, go to the "Load Balancing" section in the Google Cloud Console. Confirm your Network Passthrough External Load Balancer is created, and the MIG is attached as a backend and healthy.
 
 6.  **[Optional] Delete the Deployment using Cloud Build:**
 
     To remove all resources created by this deployment, run the destroy Cloud Build job:
 
-
-    To remove all resources created by this deployment, run the destroy Cloud Build job:
-
     ```bash
-    gcloud builds submit . --config docs/LoadBalancer/build/cloudbuild-nelb-destroy.yaml
     gcloud builds submit . --config docs/LoadBalancer/build/cloudbuild-nelb-destroy.yaml
     ```
 
