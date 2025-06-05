@@ -110,7 +110,7 @@ This method uses Google Cloud Shell and Cloud Build to automate the deployment o
 4.  **Submit Cloud Build Job to Deploy NLB:**
     Once configuration files are updated and the prerequisites script has been successfully executed, submit the Cloud Build job. This will trigger Terraform to provision the resources. Ensure you are in the root of the cloned repository.
     ```bash
-    gcloud builds submit . --config docs/LoadBalancer/build/cloudbuild-nlb.yaml --project YOUR_PROJECT_ID
+    gcloud builds submit . --config docs/LoadBalancer/build/Net-Ext-Passthrough-LB/cloudbuild-nelb.yaml --ignore-file=".gcloudignore"
     ```
     Replace `YOUR_PROJECT_ID` with your actual Google Cloud Project ID (this should be the same project ID used in the `prereq-nlb.sh` script and your `.tfvars` files).
 
@@ -120,7 +120,7 @@ This method uses Google Cloud Shell and Cloud Build to automate the deployment o
 6.  **[Optional] Delete the Deployment using Cloud Build:**
     To remove all resources provisioned by this NLB deployment via Cloud Build, run the corresponding destroy job:
     ```bash
-    gcloud builds submit . --config docs/LoadBalancer/build/cloudbuild-nlb-destroy.yaml --project YOUR_PROJECT_ID
+    gcloud builds submit . --config docs/LoadBalancer/build/Net-Ext-Passthrough-LB/cloudbuild-nelb-destroy.yaml --ignore-file=".gcloudignore"
     ```
     Replace `YOUR_PROJECT_ID` with your Google Cloud Project ID.
 
