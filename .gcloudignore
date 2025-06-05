@@ -2,7 +2,6 @@
 .terraform/
 *.tfstate
 *.tfplan
-*.tfvars
 *.tf
 !providers.tf
 **/*.DS_Store
