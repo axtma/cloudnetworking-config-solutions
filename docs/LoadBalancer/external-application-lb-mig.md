@@ -119,7 +119,7 @@ This method uses Google Cloud Shell and Cloud Build to automate the deployment o
 4. **Submit Cloud Build Job to Deploy ALB:**
     Once configurations are updated and prerequisites are met, submit the Cloud Build job. Ensure you are in the root of the cloned repository.
     ```bash
-    gcloud builds submit . --config docs/LoadBalancer/build/cloudbuild-aelb.yaml
+    gcloud builds submit . --config docs/LoadBalancer/build/App-Ext-LB/cloudbuild-appextlb.yaml --ignore-file=".gcloudignore"
     ```
 
 5.  **Verify Deployment:**
@@ -129,7 +129,7 @@ This method uses Google Cloud Shell and Cloud Build to automate the deployment o
 
     To remove all resources created by this deployment, run the destroy Cloud Build job:
     ```bash
-    gcloud builds submit . --config docs/LoadBalancer/build/cloudbuild-aelb-destroy.yaml
+    gcloud builds submit . --config docs/LoadBalancer/build/App-Ext-LB/cloudbuild-appextlb-destroy.yaml --ignore-file=".gcloudignore"
     ```
 
 ### **Deploy through Terraform-cli**
