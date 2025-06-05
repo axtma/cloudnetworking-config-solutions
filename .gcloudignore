@@ -1,7 +1,2 @@
-# Terraform files
-.terraform/
-*.tfstate
-*.tfplan
-*.tf
 !providers.tf
 **/*.DS_Store
