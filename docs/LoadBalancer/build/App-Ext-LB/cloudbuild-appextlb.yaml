@@ -1,0 +1,65 @@
+# Copyright 2025 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+steps:
+- id: 'deploy-alb-mig'
+  name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:latest'
+  entrypoint: /bin/bash
+  args:
+   - '-c'
+   - |
+        set -e # Fail on any error
+        apt-get update -y && apt-get install -y unzip git wget # Ensure tools are present
+
+        TERRAFORM_VERSION="1.10.2"
+        echo "Downloading Terraform v$${TERRAFORM_VERSION}..."
+        wget https://releases.hashicorp.com/terraform/$${TERRAFORM_VERSION}/terraform_$${TERRAFORM_VERSION}_linux_amd64.zip
+        unzip terraform_$${TERRAFORM_VERSION}_linux_amd64.zip
+        mv terraform /usr/local/bin/
+        terraform version
+
+        cd execution # Navigate to the execution directory
+
+        # Bootstrap stage: uncomment if needed for a fully automated first-time setup.
+        # echo "Executing 00-bootstrap stage..."
+        # ./run.sh -s bootstrap -t init-apply-auto-approve
+
+        echo "Executing 01-organization stage for ALB..."
+        ./run.sh -s organization -t init-apply-auto-approve
+
+        echo "Executing 02-networking stage for ALB..."
+        ./run.sh -s networking -t init-apply-auto-approve
+        
+        echo "Executing 03-security/MIG stage for ALB backends..."
+        ./run.sh -s security/mig -t init-apply-auto-approve
+
+        echo "Executing 06-consumer/MIG stage for ALB backends..."
+        ./run.sh -s consumer/mig -t init-apply-auto-approve
+        
+        echo "Executing 07-consumer-load-balancing/Application/External stage for ALB..."
+        # This stage path is specific to ALB
+        ./run.sh -s load-balancing/application/external -t init-apply-auto-approve
+
+        echo "External Application Load Balancer with MIG deployment completed."
+
+options:
+  env:
+    - 'TF_VAR_project_id=$PROJECT_ID'
+timeout: 7200s # 2 hours
+tags:
+  - 'terraform'
+  - 'alb'
+  - 'application-load-balancer'
+  - 'mig-backend'
+  - 'apply'
