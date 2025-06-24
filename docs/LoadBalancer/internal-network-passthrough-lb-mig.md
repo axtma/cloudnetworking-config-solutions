@@ -88,7 +88,7 @@ This method uses Google Cloud Shell and Cloud Build to automate the deployment o
 
     **Note**: For testing, ensure the `cloudshell_git_repo` and `cloudshell_git_branch` parameters in the URL point to your fork and specific branch where these "single click" files and the updated guide exist. For the final version, this will point to the main repository.
 
-    <a href="https://ssh.cloud.google.com/cloudshell/editor?shellonly=true&cloudshell_git_repo=https://github.com/axtma/cloudnetworking-config-solutions.git&cloudshell_git_branch=main&cloudshell_workspace=.&cloudshell_open_in_editor=configuration/bootstrap.tfvars,configuration/organization.tfvars,configuration/networking.tfvars,configuration/security/mig.tfvars,configuration/consumer/MIG/config/instance.yaml.example,configuration/consumer-load-balancing/Network/Passthrough/External/config/instance-lite.yaml.example&cloudshell_tutorial=docs/LoadBalancer/external-network-passthrough-lb-mig.md#deploy-with-single-click" target="_new">
+    <a href="https://ssh.cloud.google.com/cloudshell/editor?shellonly=true&cloudshell_git_repo=https://github.com/axtma/cloudnetworking-config-solutions.git&cloudshell_git_branch=main&cloudshell_workspace=.&cloudshell_open_in_editor=configuration/bootstrap.tfvars,configuration/organization.tfvars,configuration/networking.tfvars,configuration/security/mig.tfvars,configuration/consumer/MIG/config/instance.yaml.example,configuration/consumer-load-balancing/Network/Passthrough/Internal/config/inlb-lite.yaml.example&cloudshell_tutorial=docs/LoadBalancer/internal-network-passthrough-lb-mig.md#deploy-with-single-click" target="_new">
     <img alt="Open in Cloud Shell" src="https://gstatic.com/cloudssh/images/open-btn.svg">
     </a>
 
