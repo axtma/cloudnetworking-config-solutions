@@ -1,0 +1,45 @@
+name: internal-lb-expanded
+project: gcp-project-id
+region: us-east1
+
+description: Expanded YAML for Internal Passthrough Load Balancer with multiple backends and a custom health check.
+labels:
+  env: production
+  owner: networking-team
+
+network: projects/gcp-project-id/global/networks/vpc-name
+subnetwork: projects/gcp-project-id/regions/us-east1/subnetworks/prod-subnet
+
+# Backend Service Customization
+
+backend_service:
+  session_affinity: CLIENT_IP
+  connection_draining_timeout_sec: 30
+  log_sample_rate: 0.5
+
+# Backend Configuration
+
+backends:
+  - group_name: primary-mig-us-east1
+    group_region: us-east1
+    description: Primary backend instance group
+  - group_name: secondary-zonal-ig
+    group_zone: us-east1-b
+    description: Secondary zonal instance group
+
+health_check:
+  check_interval_sec: 10
+  timeout_sec: 10
+  healthy_threshold: 3
+  unhealthy_threshold: 5
+  enable_logging: true
+  description: Custom health check for web servers
+  http:
+    port: 8080
+    request_path: /
+
+forwarding_rule:
+  protocol: TCP
+  ports: [80, 443]
+  address: 10.10.20.5
+  global_access: true

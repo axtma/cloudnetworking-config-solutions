@@ -1,0 +1,15 @@
+project_id: your_project_id         # The ID of your Google Cloud project
+zone: your_zone                    # The zone where your instances are located (e.g., us-central1-a)
+name: your_umig_name               # The name you want to assign to this unmanaged instance group
+description: "Instance group managed by the UMIG Terraform module."
+network: your_network_name         # The name of the VPC network for the instances (e.g., default)
+
+instances:                         # List the names of the instances to include in this group
+  - instance_name_1
+  - instance_name_2
+
+named_ports:                       # Named ports to associate with the group (for load balancing, etc.)
+  - name: http
+    port: 80
+  - name: https
+    port: 443

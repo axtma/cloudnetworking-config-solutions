@@ -16,23 +16,24 @@ The deployment is divided into seven logically isolated stages, each handled by 
 
     **Bootstrap Output (Example):**
     ```
-   + consumer_mig_email      = "serviceAccount:consumer-mig-sa@<project-id>.iam.gserviceaccount.com"
-   + consumer_lb_email       = "serviceAccount:consumer-lb-sa@<project-id>.iam.gserviceaccount.com"
-   + consumer_cloudrun_email = "serviceAccount:consumer-cloudrun-sa@<project-id>.iam.gserviceaccount.com"
-   + consumer_gce_email      = "serviceAccount:consumer-gce-sa@<project-id>.iam.gserviceaccount.com"
-   + consumer_workbench_email = "serviceAccount:consumer-workbench-sa@<project-id>.iam.gserviceaccount.com"
-   + consumer_appengine_email = "serviceAccount:consumer-appengine-sa@<project-id>.iam.gserviceaccount.com"
+   + consumer_mig_email                  = "serviceAccount:consumer-mig-sa@<project-id>.iam.gserviceaccount.com"
+   + consumer_umig_email                 = "serviceAccount:consumer-umig-sa@<project-id>.iam.gserviceaccount.com"
+   + consumer_lb_email                   = "serviceAccount:consumer-lb-sa@<project-id>.iam.gserviceaccount.com"
+   + consumer_cloudrun_email             = "serviceAccount:consumer-cloudrun-sa@<project-id>.iam.gserviceaccount.com"
+   + consumer_gce_email                  = "serviceAccount:consumer-gce-sa@<project-id>.iam.gserviceaccount.com"
+   + consumer_workbench_email            = "serviceAccount:consumer-workbench-sa@<project-id>.iam.gserviceaccount.com"
+   + consumer_appengine_email            = "serviceAccount:consumer-appengine-sa@<project-id>.iam.gserviceaccount.com"
    + consumer_vpc_access_connector_email = "serviceAccount:consumer-vpcaccess-sa@<project-id>.iam.gserviceaccount.com"
-   + networking_email        = "serviceAccount:networking-sa@<project-id>.iam.gserviceaccount.com"
-   + producer_connectivity_email = "serviceAccount:producer-connectivity-sa@<project-id>.iam.gserviceaccount.com"
-   + organization_email      = "serviceAccount:organization-sa@<project-id>.iam.gserviceaccount.com"
-   + producer_alloydb_email  = "serviceAccount:producer-alloydb-sa@<project-id>.iam.gserviceaccount.com"
-   + producer_cloudsql_email = "serviceAccount:producer-cloudsql-sa@<project-id>.iam.gserviceaccount.com"
-   + producer_gke_email      = "serviceAccount:producer-gke-sa@<project-id>.iam.gserviceaccount.com"
-   + producer_mrc_email      = "serviceAccount:producer-mrc-sa@<project-id>.iam.gserviceaccount.com"
-   + producer_vertex_email   = "serviceAccount:producer-vertex-sa@<project-id>.iam.gserviceaccount.com"
-   + security_email          = "serviceAccount:security-sa@<project-id>.iam.gserviceaccount.com"
-   + storage_bucket_name     = "terraform-state"
+   + networking_email                    = "serviceAccount:networking-sa@<project-id>.iam.gserviceaccount.com"
+   + producer_connectivity_email         = "serviceAccount:producer-connectivity-sa@<project-id>.iam.gserviceaccount.com"
+   + organization_email                  = "serviceAccount:organization-sa@<project-id>.iam.gserviceaccount.com"
+   + producer_alloydb_email              = "serviceAccount:producer-alloydb-sa@<project-id>.iam.gserviceaccount.com"
+   + producer_cloudsql_email             = "serviceAccount:producer-cloudsql-sa@<project-id>.iam.gserviceaccount.com"
+   + producer_gke_email                  = "serviceAccount:producer-gke-sa@<project-id>.iam.gserviceaccount.com"
+   + producer_mrc_email                  = "serviceAccount:producer-mrc-sa@<project-id>.iam.gserviceaccount.com"
+   + producer_vertex_email               = "serviceAccount:producer-vertex-sa@<project-id>.iam.gserviceaccount.com"
+   + security_email                      = "serviceAccount:security-sa@<project-id>.iam.gserviceaccount.com"
+   + storage_bucket_name                 = "terraform-state"
     ```
 
     **Generating the provider.tf file**
@@ -100,7 +101,7 @@ The deployment is divided into seven logically isolated stages, each handled by 
 
 7. **06-consumer:**
    - Deploys GCP-managed consumer services.
-      - Includes Google Compute Engine (GCE) instances, Managed Instance Groups (MIG), Cloud Run, Workbench and AppEngine.
+      - Includes Google Compute Engine (GCE) instances, Managed Instance Groups (MIG), Unmanaged Instance Groups (UMIG) Cloud Run, Workbench and AppEngine.
 
 8. **07-consumer-load-balancing:**
    - Deploys GCP-managed Load Balancers.

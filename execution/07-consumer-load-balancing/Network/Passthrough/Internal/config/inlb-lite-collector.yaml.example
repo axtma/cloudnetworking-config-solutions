@@ -1,0 +1,8 @@
+name: internal-lb-lite
+project: gcp-project-id
+region: us-central1
+network: projects/gcp-project-id/global/networks/vpc-name
+subnetwork: projects/gcp-project-id/regions/us-central1/subnetworks/subnet-name
+backends:
+  - group_name: mig-us-central1
+is_mirroring_collector: true
